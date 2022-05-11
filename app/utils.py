@@ -4,7 +4,7 @@ from app.constants import URL
 
 
 def change_content(content: str) -> str:
-    """Добавлем ™ ко всем словам из 6 букв"""
+    """Добавляет ™ ко всем словам из 6 букв"""
     soup = BeautifulSoup(content, 'html.parser')
     change_urls(soup)
     comments = soup.find_all("div", {"class": "comment"})
@@ -18,7 +18,7 @@ def change_content(content: str) -> str:
 
 
 def change_urls(soup: BeautifulSoup):
-    """Меняем урлы для подключения стилей и отображения картинок"""
+    """Меняет урлы для подключения стилей и отображения картинок"""
     title = soup.find('link')
     if title:
         title['href'] = f'{URL}{title["href"]}'

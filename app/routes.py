@@ -9,6 +9,7 @@ hacker_news = Blueprint('hacker_news', __name__, template_folder='templates')
 
 @hacker_news.route('/item', methods=['GET'])
 def item():
+    """Прокстирует запрос к hacker news"""
     item_id = request.args.get('id')
     if not item_id:
         abort(400)
@@ -18,8 +19,10 @@ def item():
 
 
 def bad_request(e):
+    """Обрабатывает 400 ошибку"""
     return render_template('400.html'), 400
 
 
 def not_found(e):
+    """Обрабатывает 404 ошибку"""
     return render_template('404.html'), 404
