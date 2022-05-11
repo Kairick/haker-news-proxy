@@ -16,7 +16,7 @@ def test_item_endpoint_success(client, response_text):
 
 @pytest.mark.parametrize('endpoint', ['/', '/login', '/items'])
 def test_404_error(client, endpoint):
-    """Тестирует  поведение API при доступе к несуществующим endpoints"""
+    """Тестирует поведение API при доступе к несуществующим endpoints"""
 
     response = client.get(endpoint)
 
@@ -24,10 +24,12 @@ def test_404_error(client, endpoint):
     assert 'Page Not Found' in response.text
 
 
-@pytest.mark.parametrize('query', ['', '?name=Joe'])
+@pytest.mark.parametrize('query', ['/item', '/item?name=Joe'])
 def test_item_without_id(client, query):
     """Тестирует поведение API при правильном endpoint, но без параметра id"""
+    error = 'To work with proxy try to add "id" param to you query such as'
+
     response = client.get(query)
 
-    assert response.status_code == 404
-    assert 'Page Not Found' in response.text
+    assert response.status_code == 400
+    assert error in response.text
