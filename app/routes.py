@@ -1,28 +1,28 @@
-from flask import Blueprint, Response, abort, render_template, request
 import requests
+from flask import Blueprint, request
 
-from app.utils import change_content
 from app.constants import URL
+from app.utils import change_content
 
-hacker_news = Blueprint('hacker_news', __name__, template_folder='templates')
+EXCLUDED_HEADERS = ['content-encoding', 'content-length',
+                    'transfer-encoding', 'connection']
+STATIC_EXTENSION = ['ico', 'gif', 'js', 'css']
+
+hacker_news = Blueprint('hacker_news', __name__)
 
 
-@hacker_news.route('/item', methods=['GET'])
-def item():
+@hacker_news.route('/', methods=['GET'], defaults={'path': ''})
+@hacker_news.route('/<path:path>')
+def proxy(path):
     """Прокстирует запрос к hacker news"""
-    item_id = request.args.get('id')
-    if not item_id:
-        abort(400)
-    response = requests.get(f'{URL}item', params={'id': item_id})
-    content = change_content(response.text)
-    return Response(content.encode(encoding='UTF-8'), response.status_code)
+    response = requests.get(f'{URL}/{path}', params=dict(request.args))
 
+    headers = [(name, value) for (name, value) in response.raw.headers.items()
+               if name.lower() not in EXCLUDED_HEADERS]
 
-def bad_request(e):
-    """Обрабатывает 400 ошибку"""
-    return render_template('400.html'), 400
+    if path.split('.')[-1] in STATIC_EXTENSION:
+        return response.content, response.status_code, headers
+    else:
+        content = change_content(response.text)
+        return content, response.status_code, headers
 
-
-def not_found(e):
-    """Обрабатывает 404 ошибку"""
-    return render_template('404.html'), 404
