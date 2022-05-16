@@ -24,11 +24,11 @@ def test_change_links():
     """Тестирует подмену слов в тексте ссылок"""
     string_link = '<a href="submit">{submit}</a>'
     actual_link = '<a href="submit">{submit™}</a>'
-    soup = BeautifulSoup(string_link)
+    soup = BeautifulSoup(string_link, 'lxml')
 
     change_links(soup.find_all('a'))
 
-    assert soup == BeautifulSoup(actual_link)
+    assert soup == BeautifulSoup(actual_link, 'lxml')
 
 
 def test_change_text():
@@ -37,8 +37,8 @@ def test_change_text():
             'Some <answer!></span')
     result = ('<td><span class="hnmore"><a href="front?day=2022-05-13">day</a>'
               'Some <answer™!></span>')
-    soup = BeautifulSoup(span)
+    soup = BeautifulSoup(span, 'lxml')
 
     change_text(soup.find_all('span'))
 
-    assert soup == BeautifulSoup(result)
+    assert soup == BeautifulSoup(result, 'lxml')
