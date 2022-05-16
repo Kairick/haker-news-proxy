@@ -11,6 +11,7 @@ def change_content(content: str) -> str:
     soup = BeautifulSoup(changed_content, 'lxml')
     change_links(soup.find_all('a'))
     change_text(soup.find_all('span'))
+    change_text(soup.find_all('p'))
     return str(soup)
 
 
@@ -36,7 +37,7 @@ def add_tm_sign(tags: Tag) -> list:
     """Возвращает список с добавлением ™ к словам из 6 букв"""
     words = tags.text.split(' ')
     for i, word in enumerate(words[:]):
-        temp_word = word.strip().strip('.,():!?\'"[]<>|*&^%#{}')
+        temp_word = word.strip().strip('.,():;!?\'"[]<>|*&^%#{}')
         if temp_word.isalpha() and len(temp_word) == 6:
             words[i] = word.replace(temp_word, f'{temp_word}™')
     return words

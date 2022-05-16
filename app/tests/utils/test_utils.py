@@ -8,7 +8,7 @@ from app.utils import add_tm_sign, change_links, change_text
     "tag, expected", [
         ('<div>I am a .doctor!</div>', ['I', 'am', 'a', '.doctor™!']),
         ('<h1>(Parent & \'parent\')</h1>', ['(Parent™', '&', '\'parent™\')']),
-        ('<a>Кто пришел? Я пришел.</a>', ['Кто', 'пришел™?', 'Я', 'пришел™.']),
+        ('<a>Кто пришëл? Я пришëл.</a>', ['Кто', 'пришëл™?', 'Я', 'пришëл™.']),
     ]
 )
 def test_add_tm_sign_success(tag: str, expected: list):
